@@ -104,7 +104,7 @@ function Step2({ ingredients, onBack }) {
       animate={{ opacity: 1, y: 0 }}
     >
       <h1 className="text-3xl font-bold text-blue-600 mb-6 flex items-center gap-2">
-        <Utensils size={28} /> AI-Generated Recipe
+        <Utensils size={28} /> Here is your Recipe
       </h1>
 
       {/* Controls */}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { generateRecipe } from "../api/recipeAPI"; // ✅ added import
 
 function Step1({ ingredients, setIngredients, onNext }) {
   const [text, setText] = useState("");
@@ -50,11 +51,28 @@ function Step1({ ingredients, setIngredients, onNext }) {
     setIngredients(newList);
   };
 
+  // 🍳 Generate Smart Recipe using backend
+  const handleNext = async () => {
+    if (ingredients.length === 0) return;
+    setLoading(true);
+
+    try {
+      const result = await generateRecipe(ingredients);
+      console.log("🍳 Recipe generated:", result);
+
+      // ✅ Directly go to Step2 without alert popup
+      onNext(result);
+
+    } catch (err) {
+      console.error("Error generating recipe:", err);
+      alert("Failed to generate recipe. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-start text-gray-200 w-full bg-black h-screen overflow-hidden pt-6 sm:pt-10">
-      {/* 🌟 Snap2Cook Title + Subtitle */}
-      
-
       {/* 🧩 Step 1 Section Card */}
       <div className="bg-gray-100 text-gray-900 rounded-2xl shadow-xl p-8 w-full max-w-2xl border border-gray-300 transition-transform duration-300 hover:scale-[1.01] -mt-4 sm:-mt-6">
         <h2 className="text-2xl font-semibold text-blue-600 mb-6 text-center">
@@ -124,26 +142,21 @@ function Step1({ ingredients, setIngredients, onNext }) {
           </div>
         )}
 
-        {/* 🔘 Next Button */}
+        {/* 🔘 Generate Button */}
         <div className="flex justify-center">
           <button
-            onClick={onNext}
-            disabled={ingredients.length === 0}
+            onClick={handleNext}
+            disabled={ingredients.length === 0 || loading}
             className={`px-6 py-2 rounded-md text-white font-semibold transition ${
-              ingredients.length === 0
+              ingredients.length === 0 || loading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700 shadow-md"
             }`}
           >
-            Generate Smart Recipe →
+            {loading ? "Generating..." : "Generate Smart Recipe →"}
           </button>
         </div>
       </div>
-
-      {/* ⚙️ Footer */}
-      <footer className="mt-6 text-gray-500 text-sm text-center">
-        
-      </footer>
     </div>
   );
 }
