@@ -1,9 +1,11 @@
 const CONFIG = {
-  // ✅ Use Vercel variable first, fallback to Railway
+  // ✅ Prefer the Vercel variable, fallback to Railway manually
   API_BASE_URL:
-    import.meta.env.VITE_API_BASE_URL?.trim() ||
+    import.meta.env?.VITE_API_BASE_URL?.trim() ||
     "https://web-production-f4ec.up.railway.app",
 };
 
-console.log("🔍 Loaded API_BASE_URL:", CONFIG.API_BASE_URL); // <-- debug log
+// Debug log
+console.log("🔍 Loaded API_BASE_URL =>", CONFIG.API_BASE_URL);
+
 export default CONFIG;
