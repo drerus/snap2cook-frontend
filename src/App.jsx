@@ -6,6 +6,10 @@ import Navbar from "./components/Navbar";
 import Log from "./components/Log";
 import Signup from "./components/Signup";
 import MyRecipes from "./components/MyRecipes";
+import CONFIG from "./config"; // ✅ Import your config
+
+// 🔍 Debug: Check active API URL
+console.log("🔍 Active API URL:", CONFIG.API_BASE_URL);
 
 // 🔒 Protect routes that require login
 function ProtectedRoute({ children }) {
@@ -61,10 +65,6 @@ function App() {
                       onBack={goToStep1}
                     />
                   )}
-
-                  <footer className="mt-10 text-gray-500 text-sm">
-                  
-                  </footer>
                 </div>
               </ProtectedRoute>
             }
