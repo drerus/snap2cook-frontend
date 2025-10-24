@@ -35,15 +35,9 @@ export async function generateRecipe(ingredients) {
     console.log("✅ Parsed recipe:", data);
     return data;
 
-  }    catch (error) {
+  } catch (error) {
     console.error("🔥 Recipe fetch failed:", error);
-
-    if (error.name === "SyntaxError") {
-      alert("⚠️ Received malformed JSON from backend. Check Railway logs for details.");
-    } else {
-      alert("❌ Network or CORS error — backend might be restarting or unreachable.");
-    }
-
+    alert("Failed to fetch recipe. Please check backend connection.");
     throw error;
   }
 }
