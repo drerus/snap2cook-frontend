@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CONFIG from "../config"; // ✅ Import config
 
 function Log() {
   const [username, setUsername] = useState("");
@@ -12,7 +13,8 @@ function Log() {
       formData.append("username", username);
       formData.append("password", password);
 
-      const response = await fetch("http://127.0.0.1:8000/auth/login", {
+      // ✅ Use backend from config instead of localhost
+      const response = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: formData,
@@ -28,26 +30,22 @@ function Log() {
         setMessage(`❌ ${data.detail || "Login failed"}`);
       }
     } catch (error) {
+      console.error("🔥 Login error:", error);
       setMessage("❌ Error logging in");
     }
   };
 
   return (
-    <div
-      className="min-h-screen w-full flex flex-col items-center justify-center 
-                 bg-black text-white transition-all duration-500"
-    >
-      {/* 🌿 Snap2Cook Branding */}
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-black text-white transition-all duration-500">
       <div className="text-center mb-10 animate-fadeIn w-full">
         <h1 className="text-5xl font-extrabold text-green-400 flex items-center justify-center gap-2 drop-shadow-lg">
           🥗 Snap2Cook
         </h1>
         <p className="text-gray-400 mt-3 text-base md:text-lg font-light text-center">
-          Turn your ingredients into delicious recipes 
+          Turn your ingredients into delicious recipes
         </p>
       </div>
 
-      {/* 🔐 Login Card */}
       <div className="bg-white text-gray-800 shadow-2xl rounded-2xl p-8 w-96 border border-gray-200">
         <h2 className="text-2xl font-semibold text-blue-600 mb-4 text-center">
           Welcome Back 👋

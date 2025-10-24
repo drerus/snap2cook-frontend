@@ -3,7 +3,6 @@ import CONFIG from "../config";
 // 🍳 Generate Recipe from backend API
 export async function generateRecipe(ingredients) {
   try {
-    // Ensure we’re always calling the full backend URL
     const apiUrl = `${CONFIG.API_BASE_URL}/recipes/generate`;
     console.log("📡 Sending request to:", apiUrl);
 
@@ -13,7 +12,7 @@ export async function generateRecipe(ingredients) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        pantry: ingredients.map((i) => i.name), // backend expects a 'pantry' list
+        pantry: ingredients.map((i) => i.name),
       }),
     });
 
@@ -25,7 +24,6 @@ export async function generateRecipe(ingredients) {
     const data = await response.json();
     console.log("✅ Recipe generated successfully:", data);
     return data;
-
   } catch (error) {
     console.error("🔥 Error fetching recipe:", error);
     throw error;
