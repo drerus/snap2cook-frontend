@@ -1,6 +1,5 @@
 import CONFIG from "../config";
 
-// 🍳 Generate Recipe from backend API
 export async function generateRecipe(ingredients) {
   try {
     const apiUrl = `${CONFIG.API_BASE_URL}/recipes/generate`;
@@ -8,24 +7,37 @@ export async function generateRecipe(ingredients) {
 
     const response = await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pantry: ingredients.map((i) => i.name),
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pantry: ingredients.map(i => i.name) }),
     });
 
+    // Read text instead of JSON to handle Azure's formatting issues
+    const text = await response.text();
+    console.log("🧾 Raw backend response:", text);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to fetch recipe: ${errorText}`);
+      throw new Error(`HTTP ${response.status}: ${text}`);
     }
 
-    const data = await response.json();
-    console.log("✅ Recipe generated successfully:", data);
+    // Try to safely parse JSON, even if there's extra text around it
+    let jsonStart = text.indexOf("{");
+    let jsonEnd = text.lastIndexOf("}") + 1;
+    let jsonText = text.slice(jsonStart, jsonEnd);
+
+    let data;
+    try {
+      data = JSON.parse(jsonText);
+    } catch (parseError) {
+      console.error("⚠️ JSON parsing failed:", parseError);
+      throw new Error("Invalid JSON received from backend");
+    }
+
+    console.log("✅ Parsed recipe:", data);
     return data;
+
   } catch (error) {
-    console.error("🔥 Error fetching recipe:", error);
+    console.error("🔥 Recipe fetch failed:", error);
+    alert("Failed to fetch recipe. Please check backend connection.");
     throw error;
   }
 }
